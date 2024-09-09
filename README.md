@@ -1,6 +1,6 @@
 # Supplementary material code for “Extended-support beta regression for \[0, 1\] responses”
 
-Ioannis Kosmidis, Achim Zeileis
+[Ioannis Kosmidis](https://ikosmidis.com), [Achim Zeileis](https://www.zeileis.org)
 
 September 9, 2024
 

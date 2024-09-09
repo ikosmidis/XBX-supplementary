@@ -119,18 +119,23 @@ going through the following scripts line-by-line:
 
 `1.`
 [`code/reading-skills-interaction-stats.R`](code/reading-skills-interaction-stats.R)
-reproduces Figure 1 in the main text;
+reproduces
+
+-   Figure 1 in the main text;
 
 `2.` [`code/beta-vs-4-par-beta.R`](code/beta-vs-4-par-beta.R) reproduces
-Figure 2 in the main text;
 
-`3.` [`code/xbx-vs-beta.R`](code/xbx-vs-beta.R) reproduces Figure 3 in
-the main text;
+-   Figure 2 in the main text;
 
-`4.` [`code/xbx-vs-cn.R`](code/xbx-vs-cn.R) reproduces Figures S1-S2 in
-Section S1 of the supplementary material document;
+`3.` [`code/xbx-vs-beta.R`](code/xbx-vs-beta.R) reproduces
 
-`5.` [`code/lossaversion.R`](code/lossaversion.R) reproduces:
+-   Figure 3 in the main text;
+
+`4.` [`code/xbx-vs-cn.R`](code/xbx-vs-cn.R) reproduces
+
+-   Figures S1-S2 in Section S1 of the supplementary material document;
+
+`5.` [`code/lossaversion.R`](code/lossaversion.R) reproduces
 
 -   the numerical figures in Tables 1-3 of the main text,
 -   Figures 4-5 of the main text,
@@ -138,12 +143,13 @@ Section S1 of the supplementary material document;
     the main text,
 -   Figure S3 in Section S2 of the supplementary material document,
 -   the numerical figures in Tables S1-S3 in Section S2 of the
-    supplementary material document.
+    supplementary material document;
 
 `6.` [`code/xbx-vs-htobit-crss.R`](code/xbx-vs-htobit-crss.R) carries
 out the numerical experiment in Section 5, and reproduces
 
 -   Figure 6 of the main text,
+
 -   Figures S4-S8 in Section S3 of the supplementary material document.
 
 Computation here relies on parallel computing, which is implemented

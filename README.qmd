@@ -1,0 +1,117 @@
+---
+title: 'Supplementary material code for "Extended-support beta regression for $[0, 1]$ responses"'
+
+author:
+  - name: "Ioannis Kosmidis"
+    email: ioannis.kosmidis@warwick.ac.uk
+    affiliation: University of Warwick
+    url: https://www.ikosmidis.com
+  - name: "Achim Zeileis"
+    email: Achim.Zeileis@R-project.org
+    affiliation: University of Innsbruck
+    url: https://www.zeileis.org
+date: last-modified
+date-format: long
+format: html
+---
+
+# Directory structure
+
+```{r}
+#| echo: false
+#| message: false
+library("tinytable")
+pkgs <- data.frame(package = sort(c("betareg", "lmtest", "ggplot2", "topmodels", "distributions3", "crch", "VGAM", "dplyr")))
+for (pkg in pkgs$package)
+    library(pkg, character.only = TRUE)
+s_info <- sessionInfo()
+R_v <- s_info$R.version$version.string
+```
+
+
+The directory `code/` contains the scripts 
+```{r}
+#| echo: false
+project_dir <- "/Users/yiannis/Repositories/XBX-supplementary/"
+data.frame(script = dir(file.path(project_dir, "code/"), pattern = "*.R")) |> tt()
+```
+that reproduce all the numerical results and figures in the manuscript
+
+> Kosmidis, I. and Zeileis, A. (2024). Extended-support beta regression for [0, 1] responses.
+
+and the supplementary material document [`xbx-supp.pdf`](xbx-supp.pdf).
+
+The directory `results/` is populated by R image files that store the
+numerical results the scripts produce. The directory `figures/` is
+populated by graphics that the scripts produce.
+
+
+# R version and contributed packages
+
+All results are reproducible using `r R_v` and the contributed
+packages
+```{r}
+#| echo: false
+pkgs <- pkgs |> transform(version = sapply(pkgs$package, \(pkg) s_info$otherPkgs[[pkg]]$Version))
+rownames(pkgs) <- NULL
+tt(pkgs)
+```
+
+At the time of writing the `topmodels` are package is not on CRAN. Please install it by doing
+```{r}
+#| eval: false
+install.packages("topmodels", repos = "https://zeileis.r-universe.dev")
+```
+
+
+# Reproducing the results
+
+```{r}
+#| echo: false
+#| eval: false
+with(pkgs |> subset(package != "topmodels"), {
+     paste0("c(",
+            paste0("'https://cran.r-project.org/package=", package,
+                   "&version=", version, "'", collapse = ", "),
+            ")")
+})
+```
+
+
+The results can be reproduced by using an interactive R session and
+going through the following scripts line-by-line:
+
+`1.` [`code/reading-skills-interaction-stats.R`](code/reading-skills-interaction-stats.R) reproduces Figure 1 in the main
+  text;
+
+`2.` [`code/beta-vs-4-par-beta.R`](code/beta-vs-4-par-beta.R) reproduces Figure 2 in the main text;
+
+`3.` [`code/xbx-vs-beta.R`](code/xbx-vs-beta.R) reproduces Figure 3 in the main text;
+
+`4.` [`code/xbx-vs-cn.R`](code/xbx-vs-cn.R) reproduces Figures S1-S2 in Section S1 of the
+  supplementary material document;
+  
+`5.` [`code/lossaversion.R`](code/lossaversion.R) reproduces:
+
+   - the numerical figures in Tables 1-3 of the main text,
+   - Figures 4-5 of the main text,
+   - the Wald and likelihood ratio statistics reported in Section 4.5 of the main text,
+   - Figure S3 in Section S2 of the supplementary material document,
+   - the numerical figures in Tables S1-S3 in Section S2 of the supplementary material document.
+
+`6.` [`code/xbx-vs-htobit-crss.R`](code/xbx-vs-htobit-crss.R) carries out the numerical experiment in
+  Section 5, and reproduces
+
+   - Figure 6 of the main text,
+   - Figures S4-S8 in Section S3 of the supplementary material document.
+   
+  Computation here relies on parallel computing, which is implemented
+  through the `parallel` R package. The script will not work on
+  Windows unless `n_cores <- 1` (which will lead in long compute times
+  and is not recommended) or it is modified to use a different
+  parallel back-end. All results should be exactly reproducible in
+  Unix-based systems (e.g. macOS and Linux).
+
+
+
+

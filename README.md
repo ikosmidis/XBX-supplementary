@@ -149,7 +149,6 @@ reproduces
 out the numerical experiment in Section 5, and reproduces
 
 -   Figure 6 of the main text,
-
 -   Figures S4-S8 in Section S3 of the supplementary material document.
 
 Computation here relies on parallel computing, which is implemented

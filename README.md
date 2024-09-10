@@ -2,7 +2,7 @@
 
 Ioannis Kosmidis, Achim Zeileis
 
-September 9, 2024
+September 10, 2024
 
 # Directory structure
 
@@ -145,8 +145,8 @@ reproduces
 -   the numerical figures in Tables S1-S3 in Section S2 of the
     supplementary material document;
 
-`6.` [`code/xbx-vs-htobit-crss.R`](code/xbx-vs-htobit-crss.R) carries
-out the numerical experiment in Section 5, and reproduces
+`6.` [`code/xbx-vs-cn-crps.R`](code/xbx-vs-cn-crps.R) carries out the
+numerical experiment in Section 5, and reproduces
 
 -   Figure 6 of the main text,
 -   Figures S4-S8 in Section S3 of the supplementary material document.

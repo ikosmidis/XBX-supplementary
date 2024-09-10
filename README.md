@@ -1,6 +1,6 @@
 # Supplementary material code for “Extended-support beta regression for \[0, 1\] responses”
 
-[Ioannis Kosmidis](https://ikosmidis.com), [Achim Zeileis](https://www.zeileis.org)
+Ioannis Kosmidis, Achim Zeileis
 
 September 9, 2024
 
@@ -34,10 +34,10 @@ The directory `code/` contains the scripts
 <td>xbx-vs-beta.R</td>
 </tr>
 <tr class="even">
-<td>xbx-vs-cn.R</td>
+<td>xbx-vs-cn-crps.R</td>
 </tr>
 <tr class="odd">
-<td>xbx-vs-htobit-crss.R</td>
+<td>xbx-vs-cn.R</td>
 </tr>
 </tbody>
 </table>

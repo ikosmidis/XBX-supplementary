@@ -1,12 +1,11 @@
 ## paths ----------------------------------------------------------------------------
-
 base_path <- "~/Repositories/XBX-supplementary/"
 fig_path <- file.path(base_path, "figures/")
 code_path <- file.path(base_path, "code/")
 save_plot <- FALSE
 
-## packages -------------------------------------------------------------------------
 
+## packages -------------------------------------------------------------------------
 library("betareg")
 library("VGAM")
 library("crch")
@@ -15,12 +14,12 @@ library("topmodels")
 library("ggplot2")
 library("lmtest")
 
-## support functions
 
+## support functions ----------------------------------------------------------------
 source(file.path(code_path, "beta01.R"))
 
-## data -----------------------------------------------------------------------------
 
+## data -----------------------------------------------------------------------------
 ## averaged responses for myopic loss aversion data from nine rounds, see
 ## Glätzle-Rützler, Sutter, Zeileis (2015, Journal of Economic Behavior & Organization)
 data("LossAversion", package = "betareg")
@@ -34,7 +33,6 @@ LossAversion$investh <- factor((LossAversion$invest <= 0) + 2 * (LossAversion$in
 
 
 ## regression models ----------------------------------------------------------------
-
 ## N
 la_ols <- glm(invest ~ grade * (arrangement + age) + male, data = LossAversion)
 summary(la_ols)
@@ -53,7 +51,6 @@ summary(la_xbx)
 
 
 ## goodness of fit  -----------------------------------------------------------------
-
 r_ols <- rootogram(la_ols, confint_type = "tukey",
                    breaks = -6:16 / 10,
                    xlab = "Proportion of tokens invested",  main = "N",
@@ -89,7 +86,7 @@ lrtest(update(la_htobit, formula = . ~ grade * (arrangement + age) + male | ~ 1)
 waldtest(update(la_htobit, formula = . ~ grade * (arrangement + age) + male | ~ 1), la_htobit)
 
 
-## Mean and probability effects ------------------------------------------------
+## Mean and probability effects -----------------------------------------------------
 
 la <- subset(LossAversion, male == "yes" & grade == "10-12" & age >= 15 &  age <= 17)
 la_nd <- data.frame(arrangement = c("single", "team"), male = "yes", age = 16, grade = "10-12")
@@ -110,7 +107,6 @@ la_mean <- data.frame(
         procast(la_xbx,    newdata = la_nd, type = "mean", drop = TRUE)
     )
 )
-
 
 la_prob0 <- data.frame(
   Prediction = "P(Y < 0.05)",
@@ -149,7 +145,6 @@ la_dist$Investment = c(
 
 vapply(la_dist$Investment, format, "", digits = 3, nsmall = 3)
 
-
 la_meanprob <- rbind(la_mean, la_prob0, la_prob1) |>
   transform(Model = factor(Model, levels = la_mod))
 la_meanprob |>
@@ -175,9 +170,7 @@ if (save_plot) {
     print(fig_meanprob)
 }
 
-
-## CDF effects -----------------------------------------------------------------
-
+## CDF effects ----------------------------------------------------------------------
 iv <- -50:1050/1000
 la_cdf <- data.frame(
     Model = factor(rep(la_mod, each = 2 * length(iv)), levels = la_mod),
@@ -212,8 +205,7 @@ if (save_plot) {
     print(fig_cdf)
 }
 
-
-## three-part hurdle
+## three-part hurdle ----------------------------------------------------------------
 la_mnl1 <- vglm(investh ~ grade + arrangement + male, data = LossAversion,
                    family = multinomial(refLevel = "(0,1)"))
 la_mnl2 <- vglm(investh ~ grade * (arrangement + age) + male, data = LossAversion,
@@ -223,7 +215,6 @@ la_h2_beta <- betareg(invest ~ grade * (arrangement + age) + male | arrangement 
 
 la_hmnl1 <- beta01(la_mnl1, la_h2_beta)
 la_hmnl2 <- beta01(la_mnl2, la_h2_beta)
-
 
 coef(summary(la_mnl2))
 coef(summary(la_h2_beta))
@@ -254,5 +245,13 @@ posterior_u <- function(obj) {
         e * rule[2] * dxbeta(y, mu, phi, nu = e, log = FALSE)
     })
     rowSums(ex) / rowSums(dens)
-
 }
+
+df <- LossAversion[c("male", "arrangement", "grade", "age", "invest")]
+df$u <- posterior_u(la_xbx)
+
+ggplot(df) +
+    geom_point(aes(invest, u, col = male:grade:arrangement)) +
+    facet_grid(male ~ grade + arrangement) +
+    lims(y = c(0, 0.4))
+

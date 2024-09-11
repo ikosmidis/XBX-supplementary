@@ -228,30 +228,3 @@ logLik(la_hmnl1)
 AIC(la_hmnl1)
 BIC(la_hmnl1)
 
-
-posterior_u <- function(obj) {
-    pars <- predict(obj, type = "parameters")
-    cquad <- betareg:::quadtable(obj$control$quad)
-    mu <- pars$mu
-    phi <- pars$phi
-    nu <- pars$nu
-    y <- obj$y
-    dens <- apply(cquad, 1, function(rule) {
-        e <- rule[1] * nu
-        rule[2] * dxbeta(y, mu, phi, nu = e, log = FALSE)
-    })
-    ex <- apply(cquad, 1, function(rule) {
-        e <- rule[1] * nu
-        e * rule[2] * dxbeta(y, mu, phi, nu = e, log = FALSE)
-    })
-    rowSums(ex) / rowSums(dens)
-}
-
-df <- LossAversion[c("male", "arrangement", "grade", "age", "invest")]
-df$u <- posterior_u(la_xbx)
-
-ggplot(df) +
-    geom_point(aes(invest, u, col = male:grade:arrangement)) +
-    facet_grid(male ~ grade + arrangement) +
-    lims(y = c(0, 0.4))
-

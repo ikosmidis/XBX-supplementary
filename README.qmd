@@ -37,7 +37,7 @@ data.frame(script = dir(file.path(project_dir, "code/"), pattern = "*.R")) |> tt
 ```
 that reproduce all the numerical results and figures in the manuscript
 
-> Kosmidis, I. and Zeileis, A. (2024). Extended-support beta regression for [0, 1] responses.
+> Kosmidis, I. and Zeileis, A. (2024). Extended-support beta regression for [0, 1] responses. https://arxiv.org/abs/2409.07233
 
 and the supplementary material document [`xbx-supp.pdf`](xbx-supp.pdf).
 

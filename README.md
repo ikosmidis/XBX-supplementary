@@ -2,7 +2,7 @@
 
 Ioannis Kosmidis, Achim Zeileis
 
-September 10, 2024
+September 12, 2024
 
 # Directory structure
 
@@ -45,7 +45,7 @@ The directory `code/` contains the scripts
 that reproduce all the numerical results and figures in the manuscript
 
 > Kosmidis, I. and Zeileis, A. (2024). Extended-support beta regression
-> for \[0, 1\] responses.
+> for \[0, 1\] responses. https://arxiv.org/abs/2409.07233
 
 and the supplementary material document [`xbx-supp.pdf`](xbx-supp.pdf).
 

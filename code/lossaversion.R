@@ -21,7 +21,7 @@ source(file.path(code_path, "beta01.R"))
 
 ## data -----------------------------------------------------------------------------
 ## averaged responses for myopic loss aversion data from nine rounds, see
-## Glätzle-Rützler, Sutter, Zeileis (2015, Journal of Economic Behavior & Organization)
+## https://doi.org/10.1016/j.jebo.2014.12.021
 data("LossAversion", package = "betareg")
 
 ## ad-hoc scaled response

@@ -1,8 +1,7 @@
-# Supplementary material code for “Extended-support beta regression for \[0, 1\] responses”
-
+# Supplementary material code for “Extended-support beta regression for
+\[0, 1\] responses”
 Ioannis Kosmidis, Achim Zeileis
-
-September 12, 2024
+September 19, 2024
 
 # Directory structure
 
@@ -72,15 +71,15 @@ contributed packages
 <tbody>
 <tr class="odd">
 <td>betareg</td>
-<td>3.2-0</td>
+<td>3.2-1</td>
 </tr>
 <tr class="even">
 <td>crch</td>
-<td>1.2-0</td>
+<td>1.2-1</td>
 </tr>
 <tr class="odd">
 <td>distributions3</td>
-<td>0.2.1</td>
+<td>0.2.2</td>
 </tr>
 <tr class="even">
 <td>dplyr</td>
@@ -105,8 +104,8 @@ contributed packages
 </tbody>
 </table>
 
-At the time of writing the `topmodels` are package is not on CRAN.
-Please install it by doing
+At the time of writing the `topmodels` package is not on CRAN. Please
+install it by doing
 
 ``` r
 install.packages("topmodels", repos = "https://zeileis.r-universe.dev")

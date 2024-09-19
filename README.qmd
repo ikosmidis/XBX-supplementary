@@ -57,7 +57,7 @@ rownames(pkgs) <- NULL
 tt(pkgs)
 ```
 
-At the time of writing the `topmodels` are package is not on CRAN. Please install it by doing
+At the time of writing the `topmodels` package is not on CRAN. Please install it by doing
 ```{r}
 #| eval: false
 install.packages("topmodels", repos = "https://zeileis.r-universe.dev")

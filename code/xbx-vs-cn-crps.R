@@ -232,13 +232,20 @@ fig_all <- ggplot(data = a_results,
     geom_ribbon(data = na.omit(a_results_smooth),
                 aes(ymin = 0, ymax = rel_crps, x = log(nu), fill = sign)) +
     facet_grid(fphi ~ fmu, labeller = label_parsed) +
-    labs(x = expression(u), y = expression(S[HT] / S[XBX] - 1)) +
+    labs(x = expression(u), y = expression(S[CN] / S[XBX] - 1)) +
     scale_fill_grey(start = 0.8, end = 0.5) +
     scale_y_continuous(labels = scales::percent, limits = c(-0.3, 0.3)) +
     scale_x_continuous(breaks = log(2^seq(-6, 0, length.out = 4)),
                        labels = label_parsed(paste0("2^", seq(-6, 0, length.out = 4)))) +
     theme_bw() +
-    theme(legend.position = "top")
+    theme(legend.position = "top") +
+    scale_y_continuous(sec.axis = sec_axis(~ .,
+                                           name = expression(paste("(", phi[1], ",", phi[n], ")")),
+                                           breaks = NULL, labels = NULL)) +
+    scale_x_continuous(sec.axis = sec_axis(~ .,
+                                           name = expression(paste("(", mu[1], ",", mu[n], ")")),
+                                           breaks = NULL, labels = NULL))
+
 
 
 if (save_plot) {
@@ -251,28 +258,36 @@ if (save_plot) {
 }
 
 
-
 ## Subset of mu/phi intervals for main text
 fmu_sub <- c("'(0.25,0.75)'", "'(0.05,0.95)'", "'(0.05,0.25)'", "'(0.05,0.5)'", "'(0.05,0.75)'")
 fphi_sub <- c("'(0.5,20)'", "'(0.5,50)'", "'(20,50)'", "'(50,100)'")
+a_results_sub <- a_results |>
+    subset(fmu %in% fmu_sub & fphi %in% fphi_sub)
+bp_sub <- bp |>
+    subset(fmu %in% fmu_sub & fphi %in% fphi_sub)
+a_results_smooth_sub <- na.omit(a_results_smooth) |>
+    subset(fmu %in% fmu_sub & fphi %in% fphi_sub)
 
-
-fig_sub <- ggplot(data = a_results |> subset(fmu %in% fmu_sub & fphi %in% fphi_sub),
+fig_sub <- ggplot(data = a_results_sub,
                   aes(x = log(nu), y = rel_crps)) +
-    geom_vline(data = bp |> subset(fmu %in% fmu_sub & fphi %in% fphi_sub),
+    geom_vline(data = bp_sub,
                aes(xintercept = log(nu)), linetype = 3, col = gray(0.5)) +
-    geom_ribbon(data = na.omit(a_results_smooth) |> subset(fmu %in% fmu_sub & fphi %in% fphi_sub),
+    geom_ribbon(data = a_results_smooth_sub,
                 aes(ymin = 0, ymax = rel_crps, x = log(nu), fill = sign)) +
     facet_grid(fphi ~ fmu, labeller = label_parsed) +
-    labs(x = expression(u), y = expression(S[HT] / S[XBX] - 1)) +
+    labs(x = expression(u), y = expression(S[CN] / S[XBX] - 1)) +
     scale_fill_grey(start = 0.8, end = 0.5) +
     scale_y_continuous(labels = scales::percent, limits = c(-0.3, 0.3)) +
     scale_x_continuous(breaks = log(2^seq(-6, 0, length.out = 4)),
                        labels = label_parsed(paste0("2^", seq(-6, 0, length.out = 4)))) +
     theme_bw() +
-    theme(legend.position = "top")
-
-
+    theme(legend.position = "top") +
+    scale_y_continuous(sec.axis = sec_axis(~ .,
+                                           name = expression(paste("(", phi[1], ",", phi[n], ")")),
+                                           breaks = NULL, labels = NULL)) +
+    scale_x_continuous(sec.axis = sec_axis(~ .,
+                                           name = expression(paste("(", mu[1], ",", mu[n], ")")),
+                                           breaks = NULL, labels = NULL))
 
 if (save_plot) {
     grDevices::pdf(file.path(fig_path, paste0("xbeta-rel-crps-subset.pdf")),

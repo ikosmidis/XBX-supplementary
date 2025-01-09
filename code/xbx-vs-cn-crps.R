@@ -234,18 +234,17 @@ fig_all <- ggplot(data = a_results,
     facet_grid(fphi ~ fmu, labeller = label_parsed) +
     labs(x = expression(u), y = expression(S[CN] / S[XBX] - 1)) +
     scale_fill_grey(start = 0.8, end = 0.5) +
-    scale_y_continuous(labels = scales::percent, limits = c(-0.3, 0.3)) +
-    scale_x_continuous(breaks = log(2^seq(-6, 0, length.out = 4)),
-                       labels = label_parsed(paste0("2^", seq(-6, 0, length.out = 4)))) +
-    theme_bw() +
-    theme(legend.position = "top") +
-    scale_y_continuous(sec.axis = sec_axis(~ .,
+    scale_y_continuous(labels = scales::percent, limits = c(-0.3, 0.3),
+                       sec.axis = sec_axis(~ .,
                                            name = expression(paste("(", phi[1], ",", phi[n], ")")),
                                            breaks = NULL, labels = NULL)) +
-    scale_x_continuous(sec.axis = sec_axis(~ .,
+    scale_x_continuous(breaks = log(2^seq(-6, 0, length.out = 4)),
+                       labels = label_parsed(paste0("2^", seq(-6, 0, length.out = 4))),
+                       sec.axis = sec_axis(~ .,
                                            name = expression(paste("(", mu[1], ",", mu[n], ")")),
-                                           breaks = NULL, labels = NULL))
-
+                                           breaks = NULL, labels = NULL)) +
+    theme_bw() +
+    theme(legend.position = "top")
 
 
 if (save_plot) {
@@ -277,17 +276,17 @@ fig_sub <- ggplot(data = a_results_sub,
     facet_grid(fphi ~ fmu, labeller = label_parsed) +
     labs(x = expression(u), y = expression(S[CN] / S[XBX] - 1)) +
     scale_fill_grey(start = 0.8, end = 0.5) +
-    scale_y_continuous(labels = scales::percent, limits = c(-0.3, 0.3)) +
-    scale_x_continuous(breaks = log(2^seq(-6, 0, length.out = 4)),
-                       labels = label_parsed(paste0("2^", seq(-6, 0, length.out = 4)))) +
-    theme_bw() +
-    theme(legend.position = "top") +
-    scale_y_continuous(sec.axis = sec_axis(~ .,
+    scale_y_continuous(labels = scales::percent, limits = c(-0.3, 0.3),
+                       sec.axis = sec_axis(~ .,
                                            name = expression(paste("(", phi[1], ",", phi[n], ")")),
                                            breaks = NULL, labels = NULL)) +
-    scale_x_continuous(sec.axis = sec_axis(~ .,
+    scale_x_continuous(breaks = log(2^seq(-6, 0, length.out = 4)),
+                       labels = label_parsed(paste0("2^", seq(-6, 0, length.out = 4))),
+                       sec.axis = sec_axis(~ .,
                                            name = expression(paste("(", mu[1], ",", mu[n], ")")),
-                                           breaks = NULL, labels = NULL))
+                                           breaks = NULL, labels = NULL)) +
+    theme_bw() +
+    theme(legend.position = "top")
 
 if (save_plot) {
     grDevices::pdf(file.path(fig_path, paste0("xbeta-rel-crps-subset.pdf")),

@@ -102,51 +102,15 @@ exp_settings <- exp_settings |>
     mutate(include = factor(ifelse(avg_bp < prob_thres, "yes", "no"),
                             levels = c("no", "yes"), ordered = TRUE))
 
-## Example data sets
-set.seed(0)
-ds <- lapply(1:nrow(exp_settings), function(i) {
-    current_setting <- exp_settings[i, ]
-    dat <- with(current_setting,
-                dgp(500, beta0 = beta0, beta1 = beta1,
-                    gamma0 = gamma0, gamma1 = gamma1, nu = nu))
-    within(dat, {
-        beta0 <- current_setting$beta0
-        beta1 <- current_setting$beta1
-        gamma0 <- current_setting$gamma0
-        gamma1 <- current_setting$gamma1
-        nu <- current_setting$nu
-        fmu <- current_setting$fmu
-        fphi <- current_setting$fphi
-        avg_bp <- current_setting$avg_bp
-        color <- if (current_setting$include == "yes") gray(0.3) else gray(0.7)
-    })
-})
-ds <- do.call("rbind", ds)
-
-for (w in seq_along(nus)) {
-    c_nu <- nus[w]
-    fig <- ggplot(ds |> subset(nu == c_nu)) +
-        geom_point(aes(x, y, color = I(color)), alpha = 0.2) +
-        geom_rug(aes(x, y), sides = "l", alpha = 0.1) +
-        facet_grid(fphi ~ fmu, labeller = label_parsed) +
-        theme_bw() +
-        theme(legend.position = "bottom") +
-        labs(title = bquote(u == 2^.(log(nus[w], 2)))) +
-        scale_x_continuous(breaks = c(-1, 0, 1))
-    if (save_plot) {
-        grDevices::pdf(file.path(fig_path, paste0("xbeta-data-nu-", w, ".pdf")),
-                       width = 8, height = 5.5)
-        print(fig)
-        dev.off()
-    } else {
-        print(fig)
-    }
+sv_transform <- function(y, a) {
+    (y + a) / (1 + 2 * a)
 }
 
-## simulation
-if (file.exists(file.path(results_path, "xbetax.rds"))) {
 
-    results <- readRDS(file.path(results_path, "xbetax.rds"))
+## simulation
+if (file.exists(file.path(results_path, "xbetax-vs-beta.rds"))) {
+
+    results <- readRDS(file.path(results_path, "xbetax-vs-beta.rds"))
 
 } else {
 
@@ -159,12 +123,11 @@ if (file.exists(file.path(results_path, "xbetax.rds"))) {
     simu_settings <- subset(simu_settings, include == "yes")
     rownames(simu_settings) <- NULL
 
-
     RNGkind("L'Ecuyer-CMRG")
     set.seed(0)
     results <- mclapply(1:nrow(simu_settings), function(i) {
         current_setting <- simu_settings[i, ]
-        current_setting$xbetax <- current_setting$htobit <- NA
+        current_setting$xbetax <- current_setting$beta <- NA
         d <- with(current_setting, dgp(nobs   = nobs,
                                        beta0  = beta0,
                                        beta1  = beta1,
@@ -175,16 +138,18 @@ if (file.exists(file.path(results_path, "xbetax.rds"))) {
         ## Fit XBX and 2-limit tobit
         start_xbx <- with(current_setting, c(beta0, beta1, gamma0, gamma1, log(nu)))
         m_xbx <- try(betareg(y ~ x | x, data = d, dist = "xbetax", start = start_xbx))
-        m_ht <- try(crch(y ~ x | x, data = d, left = 0, right = 1))
+
+        d_scaled <- within(d, { y <- sv_transform(y, 1 / (2 * (nobs - 1))) })
+        m_beta <- try(betareg(y ~ x | x, data = d_scaled))
 
         ## Compute CRPS on new data
         nd <- newdgp(d)
         if (!inherits(m_xbx, "try-error"))
             current_setting$xbetax <- proscore(m_xbx, newdata = nd, type = "crps",
                                                aggregate = mean, drop = TRUE)
-        if (!inherits(m_ht, "try-error"))
-            current_setting$htobit <- proscore(m_ht, newdata = nd, type = "crps",
-                                               aggregate = mean, drop = TRUE)
+        if (!inherits(m_beta, "try-error"))
+            current_setting$beta <- proscore(m_beta, newdata = nd, type = "crps",
+                                             aggregate = mean, drop = TRUE)
         ## Report
         if (isTRUE(i %% nrep == 0)) {
             with(current_setting, {
@@ -198,11 +163,11 @@ if (file.exists(file.path(results_path, "xbetax.rds"))) {
     }, mc.cores = n_cores)
     RNGkind(kind = "default")
 
-    ## rbind and compute relative change in CRPS when moving from xbetax to htobit
+    ## rbind and compute relative change in CRPS when moving from xbetax to beta
     results <- do.call("rbind", results) |>
-        mutate(rel_crps = (htobit/xbetax - 1))
+        mutate(rel_crps = (beta/xbetax - 1))
 
-    saveRDS(results, file = file.path(results_path, "xbetax.rds"))
+    saveRDS(results, file = file.path(results_path, "xbetax-vs-beta.rds"))
 }
 
 
@@ -217,6 +182,11 @@ a_results_smooth <- tapply(a_results, ~ fmu + fphi, function(x) {
 }, simplify = FALSE)
 a_results_smooth <- do.call("rbind", c(a_results_smooth)) |>
     transform(sign = factor(ifelse(rel_crps < 0, "-", "+"), levels = c("+", "-")))
+## Ensure both signs are shown in legend
+dumm <- a_results_smooth[1, ]
+dumm$sign <- "-"
+a_results_smooth <- rbind(a_results_smooth, dumm)
+
 
 ## Find smallest u such that avg boundary probability is larger than prob_thres per setting
 ## and keep those that are less than max(nus)
@@ -233,9 +203,9 @@ fig_all <- ggplot(data = a_results,
                 aes(ymin = 0, ymax = rel_crps, x = log(nu), fill = sign)) +
     geom_point(size = 0.5, col = gray(0.65)) +
     facet_grid(fphi ~ fmu, labeller = label_parsed) +
-    labs(x = expression(u), y = expression(S[CN] / S[XBX] - 1)) +
+    labs(x = expression(u), y = expression(S[B] / S[XBX] - 1)) +
     scale_fill_grey(start = 0.8, end = 0.5) +
-    scale_y_continuous(labels = scales::percent, limits = c(-0.3, 0.3),
+    scale_y_continuous(labels = scales::percent, limits = c(-1, 5),
                        sec.axis = sec_axis(~ .,
                                            name = expression(paste("(", phi[1], ",", phi[n], ")")),
                                            breaks = NULL, labels = NULL)) +
@@ -248,61 +218,12 @@ fig_all <- ggplot(data = a_results,
     theme(legend.position = "top")
 
 
+
 if (save_plot) {
-    grDevices::pdf(file.path(fig_path, paste0("xbeta-rel-crps.pdf")),
+    grDevices::pdf(file.path(fig_path, paste0("xbeta-vs-beta-rel-crps.pdf")),
                    width = 8, height = 10)
     print(fig_all)
     dev.off()
 } else {
     print(fig_all)
 }
-
-
-## Subset of mu/phi intervals for main text
-fmu_sub <- c("'(0.25,0.75)'", "'(0.05,0.95)'", "'(0.05,0.25)'", "'(0.05,0.5)'", "'(0.05,0.75)'")
-fphi_sub <- c("'(0.5,20)'", "'(0.5,50)'", "'(20,50)'", "'(50,100)'")
-a_results_sub <- a_results |>
-    subset(fmu %in% fmu_sub & fphi %in% fphi_sub)
-bp_sub <- bp |>
-    subset(fmu %in% fmu_sub & fphi %in% fphi_sub)
-a_results_smooth_sub <- na.omit(a_results_smooth) |>
-    subset(fmu %in% fmu_sub & fphi %in% fphi_sub)
-
-fig_sub <- ggplot(data = a_results_sub,
-                  aes(x = log(nu), y = rel_crps)) +
-    geom_vline(data = bp_sub,
-               aes(xintercept = log(nu)), linetype = 2, col = gray(0.5)) +
-    geom_ribbon(data = a_results_smooth_sub,
-                aes(ymin = 0, ymax = rel_crps, x = log(nu), fill = sign)) +
-    geom_point(size = 0.5, col = gray(0.65)) +
-    facet_grid(fphi ~ fmu, labeller = label_parsed) +
-    labs(x = expression(u), y = expression(S[CN] / S[XBX] - 1)) +
-    scale_fill_grey(start = 0.8, end = 0.5) +
-    scale_y_continuous(labels = scales::percent, limits = c(-0.3, 0.3),
-                       sec.axis = sec_axis(~ .,
-                                           name = expression(paste("(", phi[1], ",", phi[n], ")")),
-                                           breaks = NULL, labels = NULL)) +
-    scale_x_continuous(breaks = log(2^seq(-6, 0, length.out = 4)),
-                       labels = label_parsed(paste0("2^", seq(-6, 0, length.out = 4))),
-                       sec.axis = sec_axis(~ .,
-                                           name = expression(paste("(", mu[1], ",", mu[n], ")")),
-                                           breaks = NULL, labels = NULL)) +
-    theme_bw() +
-    theme(legend.position = "top")
-
-if (save_plot) {
-    grDevices::pdf(file.path(fig_path, paste0("xbeta-rel-crps-subset.pdf")),
-                   width = 8, height = 6)
-    print(fig_sub)
-    dev.off()
-} else {
-    print(fig_sub)
-}
-
-
-
-
-
-
-
-

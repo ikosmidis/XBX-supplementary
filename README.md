@@ -1,8 +1,6 @@
 # Supplementary material code for “Extended-support beta regression for \[0, 1\] responses”
-
 Ioannis Kosmidis, Achim Zeileis
-
-September 19, 2024
+January 10, 2025
 
 # Directory structure
 
@@ -13,31 +11,37 @@ The directory `code/` contains the scripts
 <col style="width: 51%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>script</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>beta-vs-4-par-beta.R</td>
 </tr>
-<tr class="even">
+<tr>
 <td>beta01.R</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>lossaversion.R</td>
 </tr>
-<tr class="even">
+<tr>
 <td>reading-skills-interaction-stats.R</td>
 </tr>
-<tr class="odd">
+<tr>
+<td>xbx-vs-beta-crps.R</td>
+</tr>
+<tr>
 <td>xbx-vs-beta.R</td>
 </tr>
-<tr class="even">
+<tr>
 <td>xbx-vs-cn-crps.R</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>xbx-vs-cn.R</td>
+</tr>
+<tr>
+<td>xbx-vs-ols-crps.R</td>
 </tr>
 </tbody>
 </table>
@@ -55,7 +59,7 @@ populated by graphics that the scripts produce.
 
 # R version and contributed packages
 
-All results are reproducible using R version 4.4.1 (2024-06-14) and the
+All results are reproducible using R version 4.4.2 (2024-10-31) and the
 contributed packages
 
 <table style="width:38%;">
@@ -64,43 +68,43 @@ contributed packages
 <col style="width: 13%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>package</th>
 <th>version</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>betareg</td>
 <td>3.2-1</td>
 </tr>
-<tr class="even">
+<tr>
 <td>crch</td>
 <td>1.2-1</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>distributions3</td>
 <td>0.2.2</td>
 </tr>
-<tr class="even">
+<tr>
 <td>dplyr</td>
 <td>1.1.4</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>ggplot2</td>
 <td>3.5.1</td>
 </tr>
-<tr class="even">
+<tr>
 <td>lmtest</td>
 <td>0.9-40</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>topmodels</td>
 <td>0.3-0</td>
 </tr>
-<tr class="even">
+<tr>
 <td>VGAM</td>
-<td>1.1-11</td>
+<td>1.1-12</td>
 </tr>
 </tbody>
 </table>
@@ -157,3 +161,11 @@ unless `n_cores <- 1` (which will lead in long compute times and is not
 recommended) or it is modified to use a different parallel back-end. All
 results should be exactly reproducible in Unix-based systems (e.g. macOS
 and Linux).
+
+`7.` [`code/xbx-vs-cn-beta.R`](code/xbx-vs-beta-crps.R) and
+[`code/xbx-vs-cn-ols.R`](code/xbx-vs-ols-crps.R) carry out the numerical
+experiments in Section S5 of the supplementary material document, and
+reproduce
+
+-   Figure S9 of the supplementary material document
+-   Figure S10 of the supplementary material document

@@ -118,6 +118,13 @@ going through the following scripts line-by-line:
   parallel back-end. All results should be exactly reproducible in
   Unix-based systems (e.g. macOS and Linux).
 
+`7.` [`code/xbx-vs-cn-beta.R`](code/xbx-vs-beta-crps.R) and [`code/xbx-vs-cn-ols.R`](code/xbx-vs-ols-crps.R) carry out the numerical experiments in Section S5 of the supplementary material document, and reproduce
+
+   - Figure S9 of the supplementary material document
+   - Figure S10 of the supplementary material document
+   
+   
+   
 
 
 

@@ -1,5 +1,7 @@
 # Supplementary material code for “Extended-support beta regression for \[0, 1\] responses”
+
 Ioannis Kosmidis, Achim Zeileis
+
 January 10, 2025
 
 # Directory structure

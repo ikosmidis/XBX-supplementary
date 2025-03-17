@@ -2,9 +2,11 @@
 
 Ioannis Kosmidis, Achim Zeileis
 
-January 10, 2025
+March 17, 2025
 
 # Directory structure
+
+    Warning: package 'topmodels' was built under R version 4.4.3
 
 The directory `code/` contains the scripts
 
@@ -29,6 +31,9 @@ The directory `code/` contains the scripts
 </tr>
 <tr>
 <td>reading-skills-interaction-stats.R</td>
+</tr>
+<tr>
+<td>xbx-mean-variance.R</td>
 </tr>
 <tr>
 <td>xbx-vs-beta-crps.R</td>
@@ -139,7 +144,11 @@ reproduces
 
 `4.` [`code/xbx-vs-cn.R`](code/xbx-vs-cn.R) reproduces
 
--   Figures S1-S2 in Section S1 of the supplementary material document;
+-   Figures S1-S2 in Section S2 of the supplementary material document;
+
+`5.` [`code/xbx-mean-variance.R`](code/xbx-mean-variance.R) reproduces
+
+-   Figures S3-S4 in Section S3 of the supplementary material document;
 
 `5.` [`code/lossaversion.R`](code/lossaversion.R) reproduces
 
@@ -147,15 +156,15 @@ reproduces
 -   Figures 4-5 of the main text,
 -   the Wald and likelihood ratio statistics reported in Section 4.5 of
     the main text,
--   Figure S3 in Section S2 of the supplementary material document,
--   the numerical figures in Tables S1-S3 in Section S2 of the
+-   Figure S5 in Section S4 of the supplementary material document,
+-   the numerical figures in Tables S1-S3 in Section S4 of the
     supplementary material document;
 
 `6.` [`code/xbx-vs-cn-crps.R`](code/xbx-vs-cn-crps.R) carries out the
 numerical experiment in Section 5, and reproduces
 
 -   Figure 6 of the main text,
--   Figures S4-S8 in Section S3 of the supplementary material document.
+-   Figures S6-S10 in Section S5 of the supplementary material document.
 
 Computation here relies on parallel computing, which is implemented
 through the `parallel` R package. The script will not work on Windows
@@ -166,8 +175,7 @@ and Linux).
 
 `7.` [`code/xbx-vs-cn-beta.R`](code/xbx-vs-beta-crps.R) and
 [`code/xbx-vs-cn-ols.R`](code/xbx-vs-ols-crps.R) carry out the numerical
-experiments in Section S5 of the supplementary material document, and
+experiments in Section S6 of the supplementary material document, and
 reproduce
 
--   Figure S9 of the supplementary material document
--   Figure S10 of the supplementary material document
+-   Figures S11-S12 of the supplementary material document

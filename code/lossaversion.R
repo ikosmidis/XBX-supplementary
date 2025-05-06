@@ -67,7 +67,7 @@ r_xbx <- rootogram(la_xbx, confint_type = "tukey",
                    xlab = "Proportion of tokens invested", main = "XBX",
                    ylim = ylims, xlim = xlims,
                    axes = FALSE, plot = FALSE)
-fig_rootogram <- autoplot(c(r_ols, r_htobit, r_beta, r_xbx)) +
+fig_rootogram <- autoplot(c(r_ols, r_htobit, r_beta, r_xbx), expected_col = "black") +
     scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = c(-0.6, 1.6)) +
     facet_wrap(. ~ group)
 

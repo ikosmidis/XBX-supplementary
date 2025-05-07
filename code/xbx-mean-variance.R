@@ -33,7 +33,7 @@ e_xbx <- ggplot(pars) +
     geom_line(aes(mu, mean, col = distribution)) +
     labs(x = expression(mu), y = "Expectation") +
     facet_grid(phi_labs ~ nu_labs, labeller = label_parsed) +
-    scale_color_manual(values = gray.colors(2, start = 0.5, 0.7)) +
+    scale_color_manual(values = c("gray", "black")) +
     theme_minimal() +
     theme(legend.position = "top")
 
@@ -41,7 +41,7 @@ v_xbx <- ggplot(pars) +
     geom_line(aes(mu, variance, col = distribution)) +
     labs(x = expression(mu), y = "Variance") +
     facet_grid(phi_labs ~ nu_labs, labeller = label_parsed) +
-    scale_color_manual(values = gray.colors(2, start = 0.5, 0.7)) +
+    scale_color_manual(values = c("gray", "black")) +
     theme_minimal() +
     theme(legend.position = "top")
 
